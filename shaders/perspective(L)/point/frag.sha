@@ -1,0 +1,29 @@
+#version 450 core
+
+//output
+out vec4 color;
+
+//from vertex shader
+in vec3 fragPos;
+in vec3 fragNor;
+in vec4 fragCol;
+in vec2 fragTex;
+
+//uniforms
+uniform sampler2D tex0;
+uniform vec4 light[2];
+
+//for use in main
+vec4 lCol;
+vec3 lVec;
+float intensity,l_length;
+
+void main(){
+	vec4 texCol=texture(tex0,fragTex);
+	lVec=light[0].xyz-fragPos;
+	lCol=light[1];
+	intensity=dot(normalize(lVec),fragNor)*lCol.w;
+	clamp(intensity,0,1);
+	l_length=length(lVec);
+	color=vec4(texCol.xyz*fragCol.xyz*lCol.xyz*intensity/l_length,texCol.w);
+}

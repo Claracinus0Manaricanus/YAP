@@ -1,0 +1,36 @@
+#version 450 core
+
+layout(location=0) in vec3 pos;//vertex positions
+
+uniform vec2 rot;
+uniform ivec2 resolution;//width, height of framebuffer
+
+out vec3 fragTex;
+out vec3 col;
+
+mat4 rotYM4={//for camera Y axis rotation
+	vec4(cos(rot.y), 0,sin(rot.y),  0),
+	vec4(0,          1,         0,  0),
+	vec4(-sin(rot.y),0,cos(rot.y),  0),
+	vec4(0,          0,         0,  1)
+};
+
+mat4 rotXM4={//for cameras X axis rotation
+	vec4(1,        0,           0, 0),
+	vec4(0,cos(rot.x),-sin(rot.x), 0),
+	vec4(0,sin(rot.x), cos(rot.x), 0),
+	vec4(0,        0,           0, 1)
+};
+
+mat4 pers={
+	vec4(1/tan(1.05),    0,    0,  0),
+	vec4(0,resolution.x/(resolution.y*tan(1.05)),    0,  0),
+	vec4(0,              0,    1,  1),
+	vec4(0,              0, -0.01, 0)	
+};
+
+void main(){
+    fragTex=pos;
+	//z coordinate calculation needs check
+    gl_Position=vec4(pers*rotXM4*rotYM4*vec4(pos.xyz,1)).xyww;
+}

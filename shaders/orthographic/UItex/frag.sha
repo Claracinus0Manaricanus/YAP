@@ -1,0 +1,9 @@
+#version 450 core
+
+uniform sampler2D textureTU;
+out vec4 col;
+in vec2 tex;
+
+void main(){
+	col=texture(textureTU,tex);
+}

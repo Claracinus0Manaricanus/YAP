@@ -1,0 +1,28 @@
+#version 450 core
+
+//vertex data
+layout(location=0) in vec3 pos;
+layout(location=1) in vec3 nor;
+layout(location=2) in vec4 col;
+layout(location=3) in vec2 tex;
+
+//camera
+uniform mat4 CVM;
+//object
+uniform mat4 OVM;//object view matrix
+
+//to fragment shader
+out vec2 fragTex;
+out vec3 fragPos;
+out vec3 fragNor;
+out vec4 fragCol;
+
+
+void main(){
+	mat4 WVM=CVM*OVM;//world view matrix
+	fragPos=vec4(OVM*vec4(pos.xyz,1.0)).xyz;
+	fragNor=normalize(vec4(OVM*vec4(nor.xyz,0)).xyz);
+	fragCol=col;
+	fragTex=tex;
+	gl_Position=WVM*vec4(pos.xyz,1.0);
+}

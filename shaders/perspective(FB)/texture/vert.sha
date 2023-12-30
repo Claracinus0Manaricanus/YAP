@@ -1,0 +1,21 @@
+#version 450 core
+
+layout(location=0) in vec3 pos;//vertex positions
+layout(location=2) in vec4 col;//vertex colors
+layout(location=3) in vec2 inTexCoord;//vertex uv coordinates
+
+//camera
+uniform mat4 CVM;
+//object
+uniform mat4 OVM;
+
+out vec2 texCoord;
+out vec4 fragCol;
+
+
+void main(){
+	mat4 WVM=CVM*OVM;//world view matrix
+	texCoord=inTexCoord;
+	fragCol=col;
+	gl_Position=WVM*vec4(pos.xyz,1.0);
+}
